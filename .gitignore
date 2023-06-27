@@ -1,0 +1,9 @@
+.idea
+.env
+venv
+__pycache__
+runtime.txt
+/Frontend/node_modules
+/Frontend/npm-debug.log
+/API/logs/*
+/API/migrations/versions/*

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+
+  frontend:
+    container_name: Frontend
+    build: Frontend
+    env_file:
+      - Frontend/.env
+    ports:
+      - '3000:3000'
+
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
+    restart: on-failure
+    expose:
+      - '6379'
+
+  celery-worker:
+    container_name: celery-worker
+    build: Background
+    env_file:
+      - Background/.env
+    depends_on:
+      - redis
+
+  postgres:
+    container_name: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile  # it is built from the file as we need to install extra extension
+    restart: on-failure
+    env_file:
+      - .env
+    expose:
+      - '5432'
+
+  api:
+    container_name: API
+    build: API
+    env_file:
+      - API/.env
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgres
